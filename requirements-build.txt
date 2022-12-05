@@ -1,0 +1,5 @@
+-r requirements-dev.txt
+
+setuptools
+wheel
+twine
