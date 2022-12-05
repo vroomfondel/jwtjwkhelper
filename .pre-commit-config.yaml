@@ -21,6 +21,6 @@ repos:
     rev: v0.982
     hooks:
       - id: mypy
-        exclude: "(tests|venv)"
+        exclude: "(tests|venv|venv39)"
         additional_dependencies: [types-pytz]
         #additional_dependencies: [types-cachetools]
