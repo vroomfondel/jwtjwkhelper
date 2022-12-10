@@ -12,6 +12,8 @@ import jwt
 import pytz as pytz
 from loguru import logger
 
+logger.disable("jwtjwkhelper")
+
 _tz: tzinfo = pytz.timezone(
     os.getenv("TZ", "Europe/Berlin")
 )  # explicitely setting TZ for this module to Europe/Berlin if not set

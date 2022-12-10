@@ -24,13 +24,13 @@ packages = ["jwtjwkhelper"]
 
 [project]
 name = "jwtjwkhelper"
-version = "0.0.2"
+version = "0.0.4"
 authors = [
   { name="Henning Thieß", email="ht@xomox.cc" },
 ]
 description = "JWTJWKHelper"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
