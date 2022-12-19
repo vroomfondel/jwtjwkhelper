@@ -197,6 +197,17 @@ def create_rsa_key_pairs_return_as_pem(
     return ret
 
 
+def get_pubkey_as_jwksetkeyentry(pubkey_as_pem: str, keyid: str) -> dict:
+    pubkey_jwk: jwk.JWK = jwk.JWK.from_pem(pubkey_as_pem.encode("utf-8"))
+
+    dp: dict[str, Any] = pubkey_jwk.export_public(True)
+    dp["alg"] = "RS256"
+    dp["use"] = "sig"
+    dp["kid"] = keyid
+
+    return dp
+
+
 def create_rsa_key_pairs_and_write_to_keydir(
     amount: int = 10,
     modname: str = "JWTJWKHelper",
