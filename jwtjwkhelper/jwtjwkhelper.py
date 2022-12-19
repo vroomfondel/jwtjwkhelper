@@ -132,12 +132,20 @@ def create_jwt_hs256(payload: dict, keyid: str, key: str, expiration_delta: time
 
 
 def create_jwt_rs256(
-    payload: dict, keyid: str, privkey_as_pem: str, expiration_delta: timedelta = timedelta(minutes=60)
+    payload: dict,
+    keyid: str,
+    privkey_as_pem: str,
+    jku: Optional[str] = None,
+    expiration_delta: timedelta = timedelta(minutes=60),
 ) -> str:
     payload["exp"] = datetime.utcnow() + expiration_delta
     payload["kid"] = keyid
 
-    token = jwt.encode(payload, privkey_as_pem, algorithm="RS256", headers={"kid": keyid}, json_encoder=ComplexEncoder)
+    headers: dict = {"kid": keyid}
+    if jku:
+        headers["jku"] = jku
+
+    token = jwt.encode(payload, privkey_as_pem, algorithm="RS256", headers=headers, json_encoder=ComplexEncoder)
     return token
 
 
