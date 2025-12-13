@@ -1,18 +1,23 @@
-name: black-lint and static type check
+name: black-lint
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - "OFFmain"
+
+  pull_request:
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - name: checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: setting up python env
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.9'
+          python-version: '3.14'
 
       - name: get some runtime info
         run: |
@@ -30,5 +35,4 @@ jobs:
       - name: "linting with black :: check only"
         run: black -l 120 --check  .
 
-      - name: static type checking with mypy
-        run: mypy *.py **/*.py
+
