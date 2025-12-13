@@ -1,4 +1,4 @@
-.PHONY: tests
+.PHONY: tests help install venv lint dstart isort tcheck build build-psql commit-checks prepare pypibuild pypipush
 SHELL := /usr/bin/bash
 .ONESHELL:
 
@@ -11,19 +11,27 @@ help:
 	@printf "\ntests\n\tLaunch tests\n"
 	@printf "\nprepare\n\tLaunch tests and commit-checks\n"
 	@printf "\ncommit-checks\n\trun pre-commit checks on all files\n"
-	# @printf "\nbuild \n\tbuild docker image\n"
+	@printf "\pypibuild \n\tbuild image package for pypi\n"
+	@printf "\pypipush \n\push package to pypi\n"
 
-venv_activated=if [ -z $${VIRTUAL_ENV+x} ]; then printf "activating venv...\n" ; source venv/bin/activate ; else printf "venv already activated\n"; fi
+
+
+# check for "CI" not in os.environ || "GITHUB_RUN_ID" not in os.environ
+venv_activated=if [ -z $${VIRTUAL_ENV+x} ] && [ -z $${GITHUB_RUN_ID+x} ] ; then printf "activating venv...\n" ; source .venv/bin/activate ; else printf "venv already activated or GITHUB_RUN_ID=$${GITHUB_RUN_ID} is set\n"; fi
 
 install: venv
 
-venv: venv/touchfile
+venv: .venv/touchfile
 
-venv/touchfile: requirements.txt requirements-dev.txt
-	test -d venv || python3.10 -m venv
-	source venv/bin/activate
-	pip install -r requirements-dev.txt
-	touch venv/touchfile
+.venv/touchfile: requirements.txt requirements-dev.txt
+	@if [ -z "$${GITHUB_RUN_ID}" ]; then \
+		test -d .venv || python3.14 -m venv .venv; \
+		source .venv/bin/activate; \
+		pip install -r requirements-dev.txt; \
+		touch .venv/touchfile; \
+	else \
+  		echo "Skipping venv setup because GITHUB_RUN_ID is set"; \
+  	fi
 
 
 tests: venv
@@ -40,7 +48,8 @@ isort: venv
 
 tcheck: venv
 	@$(venv_activated)
-	mypy jwtjwkhelper
+	mypy scripts jwtjwkhelper
+
 
 .git/hooks/pre-commit: venv
 	@$(venv_activated)
@@ -52,18 +61,52 @@ commit-checks: .git/hooks/pre-commit
 
 prepare: tests commit-checks
 
+JWTJWKHELPER_SOURCES := jwtjwkhelper/*.py
+VENV_DEPS := requirements.txt requirements-dev.txt requirements-build.txt
 
-pypibuild: venv
+VERSION := $(shell egrep -m 1 ^version pyproject.toml | tr -s ' ' | tr -d '"' | tr -d "'" | tr -d " " | cut -d'=' -f2)
+
+dist/jwtjwkhelper-$(VERSION).tar.gz dist/jwtjwkhelper-$(VERSION)-py3-none-any.whl dist/.touchfile: $(jwtjwkhelper_JWTJWKHELPER) $(VENV_DEPS) pyproject.toml
 	@$(venv_activated)
+	rm -vf dist/jwtjwkhelper-*
 	pip install -r requirements-build.txt
-	pip install --upgrade twine build
-	python3 -m build
+	# pip install --upgrade twine build
+	# python3 -m build
+	# hatch version fix  # would bump version
+	hatch build --clean
+	@touch dist/.touchfile
 
 
-#	python3 -m twine upload --repository pypi dist/*
+pypibuild: venv dist/jwtjwkhelper-$(VERSION).tar.gz dist/jwtjwkhelper-$(VERSION)-py3-none-any.whl
 
-# UPLOAD:
+
+dist/.touchfile_push: dist/jwtjwkhelper-$(VERSION).tar.gz dist/jwtjwkhelper-$(VERSION)-py3-none-any.whl
+	@$(venv_activated)
+	# python3 -m twine upload --repository pypi dist/jwtjwkhelper-$(VERSION).tar.gz dist/jwtjwkhelper-$(VERSION)-py3-none-any.whl
+	hatch publish -r main
+	@touch dist/.touchfile_push
+
+pypipush: venv dist/.touchfile_push
+
+# From https://hatch.pypa.io/latest/publish/#authentication
+# HATCH_INDEX_USER and HATCH_INDEX_AUTH
+
+# UPLOAD (old twine):
 # python3 -m twine upload --repository testpypi dist/*
-#python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps example-package-YOUR-USERNAME-HERE
-#python3 -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ jwtjwkhelper-vroomfondel==0.0.2
+
+# UPLOAD to pypitest with hatch:
+# hatch publish -r test
+
+# UPLOAD to pypi(main) with hatch:
+# hatch publish -r main
+
+# INSTALL from test
+# python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps example-package-YOUR-USERNAME-HERE
+
+# INSTALL from test (if not found on pypitest -> install from normal pypi
+# python3 -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ jwtjwkhelper==0.0.13
+
+# INSTALL from pypi(main)
+# python3 -m pip install jwtjwkhelper==0.0.13
+
 

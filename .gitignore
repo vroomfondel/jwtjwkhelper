@@ -2,6 +2,13 @@
 *SECRET*
 /.idea
 
+/docker-config
+*_test.py
+.idea/
+/upydev_.config
+*.local.*
+/scripts/logdir/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

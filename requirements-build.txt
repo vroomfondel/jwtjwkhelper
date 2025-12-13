@@ -1,5 +1,6 @@
 -r requirements-dev.txt
 
-setuptools
-wheel
-twine
+hatch
+#setuptools
+#wheel
+#twine
