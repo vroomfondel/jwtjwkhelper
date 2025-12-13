@@ -44,7 +44,7 @@ def write_private_key(key: jwk.JWK, filepath: Path, private_key_password: Option
         raise Exception("Key has not private Key Part")
 
     with open(filepath, "wb") as f:
-        f.write(key.export_to_pem(private_key=True, password=private_key_password))
+        f.write(key.export_to_pem(private_key=True, password=private_key_password))  # type: ignore
     logger.info(f"Written to: {filepath}")
 
 
@@ -54,7 +54,7 @@ def write_public_key(key: jwk.JWK, filepath: Path) -> None:
     logger.info(f"Written to: {filepath}")
 
 
-def read_private_key(filepath: Path, private_key_password: Optional[str] = None) -> jwk.JWK:
+def read_private_key(filepath: Path, private_key_password: Optional[bytes] = None) -> jwk.JWK:
     with open(filepath, "rb") as f:
         keyd = f.read()
         key = jwk.JWK.from_pem(keyd, private_key_password)
@@ -112,7 +112,7 @@ def get_verified_payload_rs256hs256(
             options={
                 # "verify_aud": False,
                 "verify_exp": verify_exp,
-                "require": ["exp", "kid"]
+                "require": ["exp", "kid"],
                 # options={"verify_signature": False})
             },
         )
@@ -151,7 +151,7 @@ def create_jwt_rs256(
 
 @lru_cache
 def get_key_pair_pem_from_key_id_in_keydir(
-    keyid: str, modname: str = "JWTJWKHelper", keydir: Path = Path.home(), private_key_password: Optional[str] = None
+    keyid: str, modname: str = "JWTJWKHelper", keydir: Path = Path.home(), private_key_password: Optional[bytes] = None
 ) -> Tuple[str, str]:
 
     pubkey_jwk: jwk.JWK
@@ -166,7 +166,7 @@ def get_key_pair_pem_from_key_id_in_keydir(
 
 
 def get_key_pair_jwk_from_key_id_in_keydir(
-    keyid: str, modname: str = "JWTJWKHelper", keydir: Path = Path.home(), private_key_password: Optional[str] = None
+    keyid: str, modname: str = "JWTJWKHelper", keydir: Path = Path.home(), private_key_password: Optional[bytes] = None
 ) -> Tuple[jwk.JWK, jwk.JWK]:
 
     privkeypath: Path = Path(keydir, f"{modname}_priv_{keyid}.pem")
@@ -185,7 +185,7 @@ class RSAKeyPairPEM:
 
 
 def create_rsa_key_pairs_return_as_pem(
-    amount: int = 3, keylength: Literal[2048, 3072, 4096] = 3072, private_key_password: Optional[str] = None
+    amount: int = 3, keylength: Literal[2048, 3072, 4096] = 3072, private_key_password: Optional[bytes] = None
 ) -> List[RSAKeyPairPEM]:
 
     ret = []
@@ -246,7 +246,7 @@ def create_rsa_key_pairs_and_write_to_keydir(
 
 @lru_cache
 def get_keys_in_keydir_as_jkset_dict(
-    modname: str = "JWTJWKHelper", keydir: Path = Path.home(), private_key_password: Optional[str] = None
+    modname: str = "JWTJWKHelper", keydir: Path = Path.home(), private_key_password: Optional[bytes] = None
 ) -> dict:
     # jws: jwk.JWKSet = jwk.JWKSet()
 
