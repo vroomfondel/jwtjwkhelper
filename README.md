@@ -1,5 +1,6 @@
 ![mypy and pytests](https://github.com/vroomfondel/jwtjwkhelper/actions/workflows/mypynpytests.yml/badge.svg)
 ![Cumulative Clones](https://img.shields.io/endpoint?logo=github&url=https://gist.githubusercontent.com/vroomfondel/a40d7876ff29aa14f40d7dc17796752e/raw/jwtjwkhelper_clone_count.json)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/jwtjwkhelper?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=PyPi+Downloads)](https://pepy.tech/projects/jwtjwkhelper)
 
 [![https://github.com/vroomfondel/jwtjwkhelper/raw/main/Gemini_Generated_Image_jwtjwkhelper_eqesiqeqesiqeqes_250x250.png](https://github.com/vroomfondel/jwtjwkhelper/raw/main/Gemini_Generated_Image_jwtjwkhelper_eqesiqeqesiqeqes_250x250.png)](https://github.com/vroomfondel/jwtjwkhelper)
 
