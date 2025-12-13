@@ -1,5 +1,5 @@
 ![mypy and pytests](https://github.com/vroomfondel/jwtjwkhelper/actions/workflows/mypynpytests.yml/badge.svg)
-![Cumulative Clones](https://img.shields.io/endpoint?logo=github&url=https://gist.githubusercontent.com/vroomfondel/98e7e1bf08bf1bdefdcc68e96985710d/raw/jwtjwkhelper_clone_count.json)
+![Cumulative Clones](https://img.shields.io/endpoint?logo=github&url=https://gist.githubusercontent.com/vroomfondel/a40d7876ff29aa14f40d7dc17796752e/raw/jwtjwkhelper_clone_count.json)
 
 [![https://github.com/vroomfondel/jwtjwkhelper/raw/main/Gemini_Generated_Image_jwtjwkhelper_eqesiqeqesiqeqes_250x250.png](Gemini_Generated_Image_jwtjwkhelper_eqesiqeqesiqeqes_250x250.png)](https://github.com/vroomfondel/jwtjwkhelper)
 
