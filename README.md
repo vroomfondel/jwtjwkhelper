@@ -28,7 +28,7 @@ It is intended as a small utility library you can import into your projects. The
 - Build backend: `hatchling`
 - Package manager: standard `pip`/`venv` (no lock file)
 - Test framework: `pytest`
-- Type checking: `mypy` (config: `.mypy.ini`)
+- Type checking: `mypy` (default settings; no project-specific config file committed)
 - Formatting/Lint: `black` (via CI/pre-commit)
 
 Runtime dependencies (see `pyproject.toml`):
@@ -62,8 +62,6 @@ source .venv/bin/activate  # on Windows: .venv\Scripts\activate
 pip install jwtjwkhelper
 ```
 
-TODO: Add PyPI badge/link once published and versioned release is confirmed.
-
 ## Common tasks (Makefile)
 
 The Makefile wraps the most common developer tasks and will auto-activate the local venv for each command.
@@ -88,6 +86,9 @@ The Makefile wraps the most common developer tasks and will auto-activate the lo
   - `make pypipush`
 
 Note: For commands that are not Make targets (e.g., running ad-hoc Python snippets), activate the venv first: `source .venv/bin/activate`.
+
+Notes:
+- The Makefile creates a virtual environment using `python3.14`. Ensure Python 3.14 is available on your system, or create/activate a venv manually and run the commands without the Makefile.
 
 ## Quick Start
 
@@ -142,7 +143,8 @@ For full behavior and parameters, see the function docstrings and `jwtjwkhelper/
 ## Environment Variables
 
 - None required by default.
-- TODO: Document any optional env vars if/when introduced (e.g., default key directory, passwords via env, etc.).
+- `TZ` (optional): timezone string used for formatting dates in this module; defaults to `Europe/Berlin`. Example: `TZ=UTC`.
+- TODO: Document any additional optional env vars if/when introduced (e.g., default key directory, passwords via env, etc.).
 
 ## Scripts
 
@@ -174,20 +176,27 @@ python -m mypy .
 pytest -q
 ```
 
-GitHub Actions workflows configured:
-- `.github/workflows/mypynpytests.yml` — mypy + pytest
-- `.github/workflows/checkblack.yml` — black formatting check
+CI:
+- GitHub Actions badges are included at the top of this README.
+- TODO: Verify the workflow file names/paths in the repository (e.g., `mypynpytests.yml`, `checkblack.yml`) and update the badges if they change.
 
 ## Project Structure
 
 ```
 .
-├── LICENSE
+├── LICENSE.md
+├── LICENSEGPL.md
+├── LICENSELGPL.md
+├── LICENSEMIT.md
+├── LICENSEPPA.txt
 ├── Makefile
 ├── README.md
 ├── jwtjwkhelper/
 │   ├── __init__.py
 │   └── jwtjwkhelper.py
+├── dist/
+│   ├── jwtjwkhelper-<version>.tar.gz
+│   └── jwtjwkhelper-<version>-py3-none-any.whl
 ├── pyproject.toml
 ├── pytest.ini
 ├── requirements.txt
@@ -221,12 +230,14 @@ hatch build
 
 Artifacts will be written to the `dist/` directory.
 
-Publishing to PyPI/TestPyPI is not automated here; use your usual publishing flow.
-TODO: Document release/publish steps if/when standardized.
+Publishing:
+- The Makefile provides `make pypibuild` and `make pypipush` targets (uses `hatch`).
+- Authentication for `hatch publish` typically uses `HATCH_INDEX_USER` and `HATCH_INDEX_AUTH` environment variables.
+- TODO: Document the exact release process (tags, changelog, versioning policy) if/when standardized.
 
 ## License
 
-MIT License — see `LICENSE`.
+MIT License — see `LICENSE.md`.
 
 ## Links
 
