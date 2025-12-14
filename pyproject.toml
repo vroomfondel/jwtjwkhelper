@@ -21,18 +21,41 @@ packages = ["jwtjwkhelper"]
 
 [project]
 name = "jwtjwkhelper"
-version = "0.0.8"
+# version = "0.0.8"
+dynamic = ["version"]
 authors = [
   { name="Henning Thieß", email="ht@xomox.cc" },
 ]
 description = "JWTJWKHelper"
 readme = "README.md"
 requires-python = ">=3.12"
+license-files = ["LICENSE.md"]
+
+keywords = ["jwt", "jwk", "json web token", "json web key", "cryptography", "authentication", "security", "token", "public key", "private key"]
+# https://pypi.org/classifiers/
+# https://github.com/pypa/trove-classifiers/blob/main/src/trove_classifiers/__init__.py
 classifiers = [
+    #   3 - Alpha
+    #   4 - Beta
+    #   5 - Production/Stable
+    "Development Status :: 5 - Production/Stable",
+
     "Programming Language :: Python :: 3",
+#    "Programming Language :: Python :: 3.12",
+#    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+
+    #"Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet",
+    "Topic :: Internet :: WWW/HTTP :: Session",
+
+    # "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+
 
 dependencies = [
     'loguru>=0.7.3',
@@ -48,6 +71,12 @@ dependencies = [
 
 
 [project.urls]
-"Homepage" = "https://github.com/vroomfondel/jwtjwkhelper"
+Homepage = "https://github.com/vroomfondel/jwtjwkhelper"
+Repository = "https://github.com/vroomfondel/jwtjwkhelper"
+Issues = "https://github.com/vroomfondel/jwtjwkhelper/issues"
+# Changelog = "https://github.com/me/spam/blob/master/CHANGELOG.md"
 # "Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
 
+[tool.hatch.version]
+path = "jwtjwkhelper/__init__.py"
+# pattern = "BUILD = 'b(?P<version>[^']+)'"

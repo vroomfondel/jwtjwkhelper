@@ -23,11 +23,11 @@ install: venv
 
 venv: .venv/touchfile
 
-.venv/touchfile: requirements.txt requirements-dev.txt
+.venv/touchfile: requirements.txt requirements-dev.txt requirements-build.txt
 	@if [ -z "$${GITHUB_RUN_ID}" ]; then \
 		test -d .venv || python3.14 -m venv .venv; \
 		source .venv/bin/activate; \
-		pip install -r requirements-dev.txt; \
+		pip install -r requirements-build.txt; \
 		touch .venv/touchfile; \
 	else \
   		echo "Skipping venv setup because GITHUB_RUN_ID is set"; \
@@ -64,15 +64,11 @@ prepare: tests commit-checks
 JWTJWKHELPER_SOURCES := jwtjwkhelper/*.py
 VENV_DEPS := requirements.txt requirements-dev.txt requirements-build.txt
 
-VERSION := $(shell egrep -m 1 ^version pyproject.toml | tr -s ' ' | tr -d '"' | tr -d "'" | tr -d " " | cut -d'=' -f2)
+# VERSION := $(shell egrep -m 1 ^version pyproject.toml | tr -s ' ' | tr -d '"' | tr -d "'" | tr -d " " | cut -d'=' -f2)
+VERSION := $(shell $(venv_activated) > /dev/null 2>&1 && hatch version 2>/dev/null || echo HATCH_NOT_FOUND)
 
-dist/jwtjwkhelper-$(VERSION).tar.gz dist/jwtjwkhelper-$(VERSION)-py3-none-any.whl dist/.touchfile: $(jwtjwkhelper_JWTJWKHELPER) $(VENV_DEPS) pyproject.toml
+dist/jwtjwkhelper-$(VERSION).tar.gz dist/jwtjwkhelper-$(VERSION)-py3-none-any.whl dist/.touchfile: $(JWTJWKHELPER_SOURCES) $(VENV_DEPS) pyproject.toml
 	@$(venv_activated)
-	rm -vf dist/jwtjwkhelper-*
-	pip install -r requirements-build.txt
-	# pip install --upgrade twine build
-	# python3 -m build
-	# hatch version fix  # would bump version
 	hatch build --clean
 	@touch dist/.touchfile
 
@@ -82,7 +78,6 @@ pypibuild: venv dist/jwtjwkhelper-$(VERSION).tar.gz dist/jwtjwkhelper-$(VERSION)
 
 dist/.touchfile_push: dist/jwtjwkhelper-$(VERSION).tar.gz dist/jwtjwkhelper-$(VERSION)-py3-none-any.whl
 	@$(venv_activated)
-	# python3 -m twine upload --repository pypi dist/jwtjwkhelper-$(VERSION).tar.gz dist/jwtjwkhelper-$(VERSION)-py3-none-any.whl
 	hatch publish -r main
 	@touch dist/.touchfile_push
 
