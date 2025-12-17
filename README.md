@@ -94,7 +94,7 @@ Notes:
 
 ```python
 from datetime import timedelta
-from jwtjwkhelper.jwtjwkhelper import (
+from jwtjwkhelper import (
     create_jwt_hs256,
     create_jwt_rs256,
     get_verified_payload_rs256hs256,
@@ -125,7 +125,7 @@ jwk_set_entry = get_pubkey_as_jwksetkeyentry(pub_pem, keyid="my-rsa-key")
 
 ## API Surface (selected)
 
-Module: `jwtjwkhelper.jwtjwkhelper`
+Package: `jwtjwkhelper`
 
 - `create_jwt_hs256(payload: dict, keyid: str, key: str, expiration_delta: timedelta = timedelta(minutes=60)))`
 - `create_jwt_rs256(payload: dict, keyid: str, privkey_as_pem: str, jku: Optional[str] = None, expiration_delta: timedelta = timedelta(minutes=60))`
